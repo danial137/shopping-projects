@@ -3,13 +3,25 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Table, TableHeader, TableRow, TableHead, TableCell, TableBody } from "@/components/ui/table";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuContent, DropdownMenuSeparator,DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { PlusCircle, UserCircle, Ellipsis } from "lucide-react"
+import prisma from "@/app/lib/db";
+import Image from "next/image";
 import Link from "next/link";
 
-export default function ProductsRoute() {
+async function getData() {
+    const data = await prisma.product.findMany({
+        orderBy: {
+            createdAt: "desc"
+        }
+    })
+    return data
+}
+
+export default async function ProductsRoute() {
+    const data = await getData()
     return (
         <>
             <div className="flex items-center justify-end">
-                <Button asChild className="flex items-center gap-x-2">
+                < Button asChild className="flex items-center gap-x-2">
                     <Link href="/dashboard/products/create">
                         <PlusCircle className="w-3.5 h-3.5" />
                         <span>Add Product</span>
@@ -36,14 +48,15 @@ export default function ProductsRoute() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                <TableRow>
+                                {data.map((item) => (
+                                    <TableRow key={item.id}>
                                     <TableCell>
-                                        <UserCircle className="h-6 w-6"/>
+                                        <Image alt="product Image" src={item.images[0]} width={64} height={64} className="rounded-md object-cover h-16 w-16"/>
                                     </TableCell>
-                                    <TableCell>Nike air</TableCell>
-                                    <TableCell>Active</TableCell>
-                                    <TableCell>$299.99</TableCell>
-                                    <TableCell>15/06/2024</TableCell>
+                                    <TableCell>{item.name}</TableCell>
+                                    <TableCell>{item.status}</TableCell>
+                                    <TableCell>${item.price}</TableCell>
+                                    <TableCell>{new Intl.DateTimeFormat("en-US").format(item.createdAt)}</TableCell>
                                     <TableCell className="text-end">
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
@@ -54,12 +67,15 @@ export default function ProductsRoute() {
                                             <DropdownMenuContent align="end">
                                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                                 <DropdownMenuSeparator/>
-                                                <DropdownMenuItem>Edit</DropdownMenuItem>
+                                                <DropdownMenuItem>
+                                                    <Link href={`/dashboard/products/${item.id}`}>Edit</Link>
+                                                </DropdownMenuItem>
                                                 <DropdownMenuItem>Delete</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                     </TableCell>
                                 </TableRow>
+                                ))}
                             </TableBody>
                         </Table>
                     </CardContent>

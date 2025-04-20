@@ -16,6 +16,7 @@ import { parseWithZod } from '@conform-to/zod'
 import { productSchema } from "@/app/lib/zodSchemas"
 import { useState } from 'react'
 import { categories } from "@/app/lib/categories"
+import { SubmitButton } from "@/app/SubmitButton"
 
 import Image from "next/image"
 export default function ProductCreateRoute() {
@@ -136,7 +137,7 @@ export default function ProductCreateRoute() {
                     </div>
                 </CardContent>
                 <CardFooter>
-                    <Button>Create Product</Button>
+                    <SubmitButton/>
                 </CardFooter>
             </Card>
         </form>
