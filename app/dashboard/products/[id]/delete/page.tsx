@@ -1,8 +1,9 @@
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link";
-
-export default function DeleteRoute() {
+import { deleteProduct } from "@/app/actions";
+import { SubmitButton } from "@/app/SubmitButton"
+export default function DeleteRoute({ params }: {params: {id: string} }) {
     return(
         <div className="h-[80vh] w-full flex items-center justify-center">
             <Card className="max-w-xl">
@@ -16,7 +17,10 @@ export default function DeleteRoute() {
                     <Button variant="secondary" asChild>
                         <Link href="/dasboard/products">Cancel</Link>
                         </Button>
-                    <Button variant="destructive">Confirm</Button>
+                        <form action={deleteProduct}>
+                            <input type="hidden" name="productId" value={params.id}/>
+                        <SubmitButton text="Delete Product" variant="destructive"/>
+                        </form>
                  </CardFooter>
             </Card>
         </div>
