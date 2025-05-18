@@ -89,3 +89,8 @@ export async function deleteProduct(formData: FormData) {
 
     redirect("/dashboard/products")
 }
+
+
+export async function createBanner() {
+    
+}
