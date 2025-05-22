@@ -3,7 +3,7 @@
 import { currentUser } from '@clerk/nextjs/server'
 import { redirect } from "next/navigation";
 import { parseWithZod } from '@conform-to/zod'
-import { productSchema } from "./lib/zodSchemas"
+import { productSchema, bannerSchema } from "./lib/zodSchemas"
 import prisma from "./lib/db"
 
 export async function createProduct (prevState:unknown, formData: FormData) {
@@ -91,6 +91,71 @@ export async function deleteProduct(formData: FormData) {
 }
 
 
-export async function createBanner() {
-    
+export async function createBanner(prevState: any,  formData: FormData) {
+
+    const user = await currentUser();
+    if (!user || user.emailAddresses[0].emailAddress !== 'danial79fakhrabadi@gmail.com') {
+        return redirect("/")
+    }
+
+    const submission = parseWithZod(formData, {
+        schema: bannerSchema,
+    });
+
+    if (submission.status !== "success"){
+        return submission.reply();
+    }
+  await prisma.banner.create({
+    data: {
+      title: submission.value.title,
+      imageString: submission.value.imageString,
+    }
+  });
+
+  return redirect("/dashboard/banner");
+}
+
+
+export async function deleteBanner(formData: FormData) {
+    const user = await currentUser()
+
+    if (!user || user.emailAddresses[0].emailAddress !== 'danial79fakhrabadi@gmail.com') {
+        return redirect("/")
+    }
+
+    await prisma.banner.delete({
+        where: {
+            id: formData.get('bannerId') as string
+        }
+    })
+
+    return redirect("/dashboard/banner")
+}
+
+
+export async function editBanner(formData: FormData) {
+    const user = await currentUser()
+
+    if (!user || user.emailAddresses[0].emailAddress !== 'danial79fakhrabadi@gmail.com') {
+        return redirect("/")
+    }
+
+    const title = formData.get('title') as string;
+    const imageUrl = formData.get('imageUrl') as string;
+
+    if (!title || !imageUrl) {
+        throw new Error("Title and Image URL are required");
+    }
+
+    await prisma.banner.update({
+        where: {
+            id: formData.get('bannerId') as string
+        },
+        data: {
+            title,
+            imageString : imageUrl
+        }
+    });
+
+    return redirect("/dashboard/banner");
 }

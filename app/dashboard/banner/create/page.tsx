@@ -1,5 +1,4 @@
 "use client"
-
 import { createBanner } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
@@ -11,15 +10,14 @@ import { UploadDropzone } from "@/app/lib/uploadthing"
 import { SubmitButton } from "@/app/SubmitButton";
 import Image from "next/image";
 import { useState } from "react";
-import { useFormState } from "react-dom"
+import { useActionState } from "react";
 import { parseWithZod } from "@conform-to/zod";
 import { useForm } from "@conform-to/react";
-import { createProduct } from "@/app/actions";
 import { bannerSchema } from "@/app/lib/zodSchemas";
 
 export default function BannerRoute() {
     const [image, setImages] = useState<string | undefined>(undefined);
-    const [lastResult, action] = useFormState(createProduct, undefined);
+    const [lastResult, action] = useActionState(createBanner, undefined);
 
     const [form, fields] = useForm({
         lastResult,

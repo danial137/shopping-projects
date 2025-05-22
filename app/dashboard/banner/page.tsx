@@ -1,12 +1,24 @@
 import { Button } from "@/components/ui/button";
 import { PlusCircle, UserCircle, Ellipsis } from "lucide-react"
 import Link from "next/link";
+import Image from "next/image";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
-import { Table, TableHeader,TableHead,TableRow, TableBody,TableCell } from "@/components/ui/table"
+import { Table, TableHeader, TableHead, TableRow, TableBody, TableCell } from "@/components/ui/table"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import prisma from "@/app/lib/db";
 
 
-export default function BannerRoute() {
+async function getData() {
+    const data = await prisma.banner.findMany({
+        orderBy: {
+            createdAt: "desc",
+        }
+    })
+    return data
+ }
+
+export default async function BannerRoute() {
+   const data = await getData();
     return (
         <>
             <div className="flex items-center justify-end">
@@ -34,33 +46,38 @@ export default function BannerRoute() {
                         </TableHeader>
 
                         <TableBody>
-                            <TableRow>
+                            {data.map((item) => (
+                            <TableRow key={item.id}>
                                 <TableCell>
-                                    <UserCircle className="h-16 w-16"/>
+                                    <Image
+                                        alt="Product Image"
+                                        src={item.imageString}
+                                        width={64}
+                                        height={64}
+                                        className="rounded-lg object-cover h-16 w-16"
+                                    />
                                 </TableCell>
                                 <TableCell className="font-medium">
-                                    Create Products
+                                    {item.title}
                                 </TableCell>
                                 <TableCell>
                                     <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button size="icon" variant="ghost">
-                                                    <Ellipsis className="h-4 w-4"/>
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
-                                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                                <DropdownMenuSeparator/>
-                                                <DropdownMenuItem asChild>
-                                                    <Link href="#">Edit</Link>
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem asChild>
-                                                    <Link href="#">Delete</Link>
-                                                </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button size="icon" variant="ghost">
+                                                <Ellipsis className="h-4 w-4" />
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end">
+                                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuItem asChild>
+                                             <Link href={`/dashboard/banner/${item.id}/delete`}>Delete</Link>
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
                                 </TableCell>
                             </TableRow>
+                            ))}
                         </TableBody>
                     </Table>
                 </CardContent>
