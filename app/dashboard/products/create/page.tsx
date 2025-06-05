@@ -16,7 +16,7 @@ import { parseWithZod } from '@conform-to/zod'
 import { productSchema } from "@/app/lib/zodSchemas"
 import { useState } from 'react'
 import { categories } from "@/app/lib/categories"
-import { SubmitButton } from "@/app/SubmitButton"
+import { SubmitButton } from "@/app/components/SubmitButton"
 
 import Image from "next/image"
 export default function ProductCreateRoute() {

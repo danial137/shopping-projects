@@ -2,7 +2,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/comp
 import { Button } from "@/components/ui/button"
 import Link from "next/link";
 import { deleteBanner } from "@/app/actions";
-import { SubmitButton } from "@/app/SubmitButton"
+import { SubmitButton } from "@/app/components/SubmitButton"
 export default function DeleteRoute({ params }: { params: { id: string } }) {
   return (
     <div className="h-[80vh] w-full flex items-center justify-center">

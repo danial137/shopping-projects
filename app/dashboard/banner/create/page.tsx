@@ -7,7 +7,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent,CardFooter, }
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { UploadDropzone } from "@/app/lib/uploadthing"
-import { SubmitButton } from "@/app/SubmitButton";
+import { SubmitButton } from "@/app/components/SubmitButton";
 import Image from "next/image";
 import { useState } from "react";
 import { useActionState } from "react";
