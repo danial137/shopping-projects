@@ -4,13 +4,10 @@ import Link from "next/link"
 import { deleteProduct } from "@/app/actions"
 import { SubmitButton } from "@/app/components/SubmitButton"
 
-interface PageProps {
-    params: {
-        id: string;
-    }
-}
+export type Params = Promise<{ id: string }>;
 
-export default async function DeleteRoute({ params }: PageProps) {
+export default async function DeleteRoute(props: {params: Params }) {
+    const { id } = await props.params
     return (
         <div className="h-[80vh] w-full flex items-center justify-center">
             <Card className="max-w-xl">
@@ -25,7 +22,7 @@ export default async function DeleteRoute({ params }: PageProps) {
                         <Link href="/dashboard/products">Cancel</Link> {/* fix typo: dasboard -> dashboard */}
                     </Button>
                     <form action={deleteProduct}>
-                        <input type="hidden" name="productId" value={params.id} />
+                        <input type="hidden" name="productId" value={id} />
                         <SubmitButton text="Delete Product" variant="destructive" />
                     </form>
                 </CardFooter>
