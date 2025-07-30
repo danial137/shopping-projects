@@ -16,9 +16,11 @@ async function getData (productId: string) {
     return data
 }
 
+export type Params = Promise<{ id: string }>;
 
-export default async function EditRoute({params} : {params : {id: string}}) {
-    const data = await getData(params.id);
+export default async function EditRoute(props: {params: Params }) {
+    const { id } = await props.params
+    const data = await getData(id);
     return (
         <EditForm data={data}/>
     )
