@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
+import type { OurFileRouter } from "@/app/api/uploadthing/core" 
 import { UploadDropzone } from "@uploadthing/react"
 import { useActionState } from "react";
 import { editProduct } from "@/app/actions"
@@ -136,15 +137,16 @@ export function EditForm({ data }: iAppProps){
                                         ))}
                                     </div>
                                 ) : (
-                                        <UploadDropzone endpoint="imageUploader"
-                                        onClientUploadComplete={(res) => {
-                                            setImages(res.map((r) => r.url))
-                                        }}
-                                        onUploadError={(error: Error) => {
-                                            // Do something with the error.
-                                            alert(`ERROR! ${error.message}`);
-                                        }}
-                                    />
+                                        <UploadDropzone<OurFileRouter, any>
+                                            endpoint="imageUploader"
+                                            onClientUploadComplete={(res) => {
+                                                setImages(res.map((r) => r.url));
+                                            }}
+                                            onUploadError={(error: Error) => {
+                                                alert(`ERROR! ${error.message}`);
+                                            }}
+                                        />
+                                  
                                 )
                             }
                             <p className="text-red-500">{fields.images.errors}</p>
